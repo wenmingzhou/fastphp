@@ -9,6 +9,8 @@ class ItemController
 
     public function index()
     {
+        $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
+        
         echo "welcome to php ";
     }
 
