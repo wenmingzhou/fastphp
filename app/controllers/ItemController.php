@@ -5,7 +5,8 @@ namespace app\controllers;
 
 class ItemController
 {
-    // 首页方法，测试框架自定义DB查询
+    // 棣栭〉鏂规硶锛屾祴璇曟鏋惰嚜瀹氫箟DB鏌ヨ
+    
     public function index()
     {
         echo "welcome to php ";
