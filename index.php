@@ -6,18 +6,18 @@
  * Time: 12:10
  */
 
-// Ó¦ÓÃÄ¿Â¼Îªµ±Ç°Ä¿Â¼
+// åº”ç”¨ç›®å½•ä¸ºå½“å‰ç›®å½•
 define('APP_PATH', __DIR__ . '/');
 
-// ¿ªÆôµ÷ÊÔÄ£Ê½
+// å¼€å¯è°ƒè¯•æ¨¡å¼
 define('APP_DEBUG', true);
 
-// ¼ÓÔØ¿ò¼ÜÎÄ¼ş
+// åŠ è½½æ¡†æ¶æ–‡ä»¶
 require(APP_PATH . 'fastphp/Fastphp.php');
 
-// ¼ÓÔØÅäÖÃÎÄ¼ş
+// åŠ è½½é…ç½®æ–‡ä»¶
 $config = require(APP_PATH . 'config/config.php');
 
-// ÊµÀı»¯¿ò¼ÜÀà
-$fastphp =new fastphp\Fastphp($config);
+// å®ä¾‹åŒ–æ¡†æ¶ç±»
+$fastphp  =new fastphp\Fastphp($config);
 $fastphp->run();

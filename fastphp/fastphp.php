@@ -1,166 +1,177 @@
 <?php
 namespace fastphp;
-// ¿ò¼Ü¸ùÄ¿Â¼
+
+// æ¡†æž¶æ ¹ç›®å½•
 defined('CORE_PATH') or define('CORE_PATH', __DIR__);
 
 /**
- * fastphp¿ò¼ÜºËÐÄ
- */
+* fastphpæ¡†æž¶æ ¸å¿ƒ
+*/
 class Fastphp
 {
-    // ÅäÖÃÄÚÈÝ
-    protected $config = array();
-    public function __construct($config)
-    {
-        $this->config = $config;
-    }
-    // ÔËÐÐ³ÌÐò
-    public function run()
-    {
-        spl_autoload_register(array($this, 'loadClass'));
-        $this->setReporting();
-        $this->removeMagicQuotes();
-        $this->unregisterGlobals();
-        $this->setDbConfig();
-        $this->route();
-    }
+// é…ç½®å†…å®¹
+protected $config = array();
 
-    // Â·ÓÉ´¦Àí
-    public function route()
-    {
-        $controllerName = $this->config['defaultController'];
-        $actionName = $this->config['defaultAction'];
-        $param = array();
-        $url = $_SERVER['REQUEST_URI'];
-        // Çå³ý?Ö®ºóµÄÄÚÈÝ
-        $position = strpos($url, '?');
-        $url = $position === false ? $url : substr($url, 0, $position);
-        // É¾³ýÇ°ºóµÄ¡°/¡±
-        $url = trim($url, '/');
-        if ($url) {
-            // Ê¹ÓÃ¡°/¡±·Ö¸î×Ö·û´®£¬²¢±£´æÔÚÊý×éÖÐ
-            $urlArray = explode('/', $url);
-            // É¾³ý¿ÕµÄÊý×éÔªËØ
-            $urlArray = array_filter($urlArray);
-            // »ñÈ¡¿ØÖÆÆ÷Ãû
-            $controllerName = ucfirst($urlArray[0]);
-            // »ñÈ¡¶¯×÷Ãû
-            array_shift($urlArray);
-            $actionName = $urlArray ? $urlArray[0] : $actionName;
-            // »ñÈ¡URL²ÎÊý
-            array_shift($urlArray);
-            $param = $urlArray ? $urlArray : array();
-        }
+public function __construct($config)
+{
+$this->config = $config;
+}
 
-        // ÅÐ¶Ï¿ØÖÆÆ÷ºÍ²Ù×÷ÊÇ·ñ´æÔÚ
-        $controller = 'app\\controllers\\'. $controllerName . 'Controller';
-        if (!class_exists($controller)) {
-            exit($controller . '¿ØÖÆÆ÷²»´æÔÚ');
-        }
-        if (!method_exists($controller, $actionName)) {
-            exit($actionName . '·½·¨²»´æÔÚ');
-        }
-        // Èç¹û¿ØÖÆÆ÷ºÍ²Ù×÷Ãû´æÔÚ£¬ÔòÊµÀý»¯¿ØÖÆÆ÷£¬ÒòÎª¿ØÖÆÆ÷¶ÔÏóÀïÃæ
-        // »¹»áÓÃµ½¿ØÖÆÆ÷ÃûºÍ²Ù×÷Ãû£¬ËùÒÔÊµÀý»¯µÄÊ±ºò°ÑËûÃÇÁ©µÄÃû³ÆÒ²
-        // ´«½øÈ¥¡£½áºÏController»ùÀàÒ»Æð¿´
-        $dispatch = new $controller($controllerName, $actionName);
-        // $dispatch±£´æ¿ØÖÆÆ÷ÊµÀý»¯ºóµÄ¶ÔÏó£¬ÎÒÃÇ¾Í¿ÉÒÔµ÷ÓÃËüµÄ·½·¨£¬
-        // Ò²¿ÉÒÔÏñ·½·¨ÖÐ´«Èë²ÎÊý£¬ÒÔÏÂµÈÍ¬ÓÚ£º$dispatch->$actionName($param)
-        call_user_func_array(array($dispatch, $actionName), $param);
-    }
+// è¿è¡Œç¨‹åº
+public function run()
+{
+spl_autoload_register(array($this, 'loadClass'));
+$this->setReporting();
+$this->removeMagicQuotes();
+$this->unregisterGlobals();
+$this->setDbConfig();
+$this->route();
+}
 
-    // ¼ì²â¿ª·¢»·¾³
-    public function setReporting()
-    {
-        if (APP_DEBUG === true) {
-            error_reporting(E_ALL);
-            ini_set('display_errors','On');
-        } else {
-            error_reporting(E_ALL);
-            ini_set('display_errors','Off');
-            ini_set('log_errors', 'On');
-        }
-    }
+// è·¯ç”±å¤„ç†
+public function route()
+{
+$controllerName = $this->config['defaultController'];
+$actionName = $this->config['defaultAction'];
+$param = array();
 
-    // É¾³ýÃô¸Ð×Ö·û
-    public function stripSlashesDeep($value)
-    {
-        $value = is_array($value) ? array_map(array($this, 'stripSlashesDeep'), $value) : stripslashes($value);
-        return $value;
-    }
+$url = $_SERVER['REQUEST_URI'];
+// æ¸…é™¤?ä¹‹åŽçš„å†…å®¹
+$position = strpos($url, '?');
+$url = $position === false ? $url : substr($url, 0, $position);
+// åˆ é™¤å‰åŽçš„â€œ/â€
+$url = trim($url, '/');
 
-    // ¼ì²âÃô¸Ð×Ö·û²¢É¾³ý
-    public function removeMagicQuotes()
-    {
-        if (get_magic_quotes_gpc()) {
-            $_GET = isset($_GET) ? $this->stripSlashesDeep($_GET ) : '';
-            $_POST = isset($_POST) ? $this->stripSlashesDeep($_POST ) : '';
-            $_COOKIE = isset($_COOKIE) ? $this->stripSlashesDeep($_COOKIE) : '';
-            $_SESSION = isset($_SESSION) ? $this->stripSlashesDeep($_SESSION) : '';
-        }
-    }
+if ($url) {
+// ä½¿ç”¨â€œ/â€åˆ†å‰²å­—ç¬¦ä¸²ï¼Œå¹¶ä¿å­˜åœ¨æ•°ç»„ä¸­
+$urlArray = explode('/', $url);
+// åˆ é™¤ç©ºçš„æ•°ç»„å…ƒç´ 
+$urlArray = array_filter($urlArray);
 
-    // ¼ì²â×Ô¶¨ÒåÈ«¾Ö±äÁ¿²¢ÒÆ³ý¡£ÒòÎª register_globals ÒÑ¾­ÆúÓÃ£¬Èç¹û
-    // ÒÑ¾­ÆúÓÃµÄ register_globals Ö¸Áî±»ÉèÖÃÎª on£¬ÄÇÃ´¾Ö²¿±äÁ¿Ò²½«
-    // ÔÚ½Å±¾µÄÈ«¾Ö×÷ÓÃÓòÖÐ¿ÉÓÃ¡£ ÀýÈç£¬ $_POST['foo'] Ò²½«ÒÔ $foo µÄ
-    // ÐÎÊ½´æÔÚ£¬ÕâÑùÐ´ÊÇ²»ºÃµÄÊµÏÖ£¬»áÓ°Ïì´úÂëÖÐµÄÆäËû±äÁ¿¡£ Ïà¹ØÐÅÏ¢£¬
-    // ²Î¿¼: http://php.net/manual/zh/faq.using.php#faq.register-globals
-    public function unregisterGlobals()
-    {
-        if (ini_get('register_globals')) {
-            $array = array('_SESSION', '_POST', '_GET', '_COOKIE', '_REQUEST', '_SERVER', '_ENV', '_FILES');
-            foreach ($array as $value) {
-                foreach ($GLOBALS[$value] as $key => $var) {
-                    if ($var === $GLOBALS[$key]) {
-                        unset($GLOBALS[$key]);
-                    }
-                }
-            }
-        }
-    }
+// èŽ·å–æŽ§åˆ¶å™¨å
+$controllerName = ucfirst($urlArray[0]);
 
-    // ÅäÖÃÊý¾Ý¿âÐÅÏ¢
-    public function setDbConfig()
-    {
-        if ($this->config['db']) {
-            define('DB_HOST', $this->config['db']['host']);
-            define('DB_NAME', $this->config['db']['dbname']);
-            define('DB_USER', $this->config['db']['username']);
-            define('DB_PASS', $this->config['db']['password']);
-        }
-    }
+// èŽ·å–åŠ¨ä½œå
+array_shift($urlArray);
+$actionName = $urlArray ? $urlArray[0] : $actionName;
 
-    // ×Ô¶¯¼ÓÔØÀà
-    public function loadClass($className)
-    {
-        $classMap = $this->classMap();
-        if (isset($classMap[$className])) {
-            // °üº¬ÄÚºËÎÄ¼þ
-            $file = $classMap[$className];
-        } elseif (strpos($className, '\\') !== false) {
-            // °üº¬Ó¦ÓÃ£¨applicationÄ¿Â¼£©ÎÄ¼þ
-            $file = APP_PATH . str_replace('\\', '/', $className) . '.php';
-            if (!is_file($file)) {
-                return;
-            }
-        } else {
-            return;
-        }
+// èŽ·å–URLå‚æ•°
+array_shift($urlArray);
+$param = $urlArray ? $urlArray : array();
+}
 
-        include $file;
+// åˆ¤æ–­æŽ§åˆ¶å™¨å’Œæ“ä½œæ˜¯å¦å­˜åœ¨
+$controller = 'app\\controllers\\'. $controllerName . 'Controller';
+if (!class_exists($controller)) {
+exit($controller . 'æŽ§åˆ¶å™¨ä¸å­˜åœ¨');
+}
+if (!method_exists($controller, $actionName)) {
+exit($actionName . 'æ–¹æ³•ä¸å­˜åœ¨');
+}
 
-        // ÕâÀï¿ÉÒÔ¼ÓÈëÅÐ¶Ï£¬Èç¹ûÃûÎª$classNameµÄÀà¡¢½Ó¿Ú»òÕßÐÔ×´²»´æÔÚ£¬ÔòÔÚµ÷ÊÔÄ£Ê½ÏÂÅ×³ö´íÎó
-    }
+// å¦‚æžœæŽ§åˆ¶å™¨å’Œæ“ä½œåå­˜åœ¨ï¼Œåˆ™å®žä¾‹åŒ–æŽ§åˆ¶å™¨ï¼Œå› ä¸ºæŽ§åˆ¶å™¨å¯¹è±¡é‡Œé¢
+// è¿˜ä¼šç”¨åˆ°æŽ§åˆ¶å™¨åå’Œæ“ä½œåï¼Œæ‰€ä»¥å®žä¾‹åŒ–çš„æ—¶å€™æŠŠä»–ä»¬ä¿©çš„åç§°ä¹Ÿ
+// ä¼ è¿›åŽ»ã€‚ç»“åˆControlleråŸºç±»ä¸€èµ·çœ‹
+$dispatch = new $controller($controllerName, $actionName);
 
-    // ÄÚºËÎÄ¼þÃüÃû¿Õ¼äÓ³Éä¹ØÏµ
-    protected function classMap()
-    {
-        return array(
-            'fastphp\base\Controller' => CORE_PATH . '/base/Controller.php',
-            'fastphp\base\Model' => CORE_PATH . '/base/Model.php',
-            'fastphp\base\View' => CORE_PATH . '/base/View.php',
-            'fastphp\db\Db' => CORE_PATH . '/db/Db.php',
-            'fastphp\db\Sql' => CORE_PATH . '/db/Sql.php',
-        );
-    }
+// $dispatchä¿å­˜æŽ§åˆ¶å™¨å®žä¾‹åŒ–åŽçš„å¯¹è±¡ï¼Œæˆ‘ä»¬å°±å¯ä»¥è°ƒç”¨å®ƒçš„æ–¹æ³•ï¼Œ
+// ä¹Ÿå¯ä»¥åƒæ–¹æ³•ä¸­ä¼ å…¥å‚æ•°ï¼Œä»¥ä¸‹ç­‰åŒäºŽï¼š$dispatch->$actionName($param)
+call_user_func_array(array($dispatch, $actionName), $param);
+}
+
+// æ£€æµ‹å¼€å‘çŽ¯å¢ƒ
+public function setReporting()
+{
+if (APP_DEBUG === true) {
+error_reporting(E_ALL);
+ini_set('display_errors','On');
+} else {
+error_reporting(E_ALL);
+ini_set('display_errors','Off');
+ini_set('log_errors', 'On');
+}
+}
+
+// åˆ é™¤æ•æ„Ÿå­—ç¬¦
+public function stripSlashesDeep($value)
+{
+$value = is_array($value) ? array_map(array($this, 'stripSlashesDeep'), $value) : stripslashes($value);
+return $value;
+}
+
+// æ£€æµ‹æ•æ„Ÿå­—ç¬¦å¹¶åˆ é™¤
+public function removeMagicQuotes()
+{
+if (get_magic_quotes_gpc()) {
+$_GET = isset($_GET) ? $this->stripSlashesDeep($_GET ) : '';
+$_POST = isset($_POST) ? $this->stripSlashesDeep($_POST ) : '';
+$_COOKIE = isset($_COOKIE) ? $this->stripSlashesDeep($_COOKIE) : '';
+$_SESSION = isset($_SESSION) ? $this->stripSlashesDeep($_SESSION) : '';
+}
+}
+
+// æ£€æµ‹è‡ªå®šä¹‰å…¨å±€å˜é‡å¹¶ç§»é™¤ã€‚å› ä¸º register_globals å·²ç»å¼ƒç”¨ï¼Œå¦‚æžœ
+// å·²ç»å¼ƒç”¨çš„ register_globals æŒ‡ä»¤è¢«è®¾ç½®ä¸º onï¼Œé‚£ä¹ˆå±€éƒ¨å˜é‡ä¹Ÿå°†
+// åœ¨è„šæœ¬çš„å…¨å±€ä½œç”¨åŸŸä¸­å¯ç”¨ã€‚ ä¾‹å¦‚ï¼Œ $_POST['foo'] ä¹Ÿå°†ä»¥ $foo çš„
+// å½¢å¼å­˜åœ¨ï¼Œè¿™æ ·å†™æ˜¯ä¸å¥½çš„å®žçŽ°ï¼Œä¼šå½±å“ä»£ç ä¸­çš„å…¶ä»–å˜é‡ã€‚ ç›¸å…³ä¿¡æ¯ï¼Œ
+// å‚è€ƒ: http://php.net/manual/zh/faq.using.php#faq.register-globals
+public function unregisterGlobals()
+{
+if (ini_get('register_globals')) {
+$array = array('_SESSION', '_POST', '_GET', '_COOKIE', '_REQUEST', '_SERVER', '_ENV', '_FILES');
+foreach ($array as $value) {
+foreach ($GLOBALS[$value] as $key => $var) {
+if ($var === $GLOBALS[$key]) {
+unset($GLOBALS[$key]);
+}
+}
+}
+}
+}
+
+// é…ç½®æ•°æ®åº“ä¿¡æ¯
+public function setDbConfig()
+{
+if ($this->config['db']) {
+define('DB_HOST', $this->config['db']['host']);
+define('DB_NAME', $this->config['db']['dbname']);
+define('DB_USER', $this->config['db']['username']);
+define('DB_PASS', $this->config['db']['password']);
+}
+}
+
+// è‡ªåŠ¨åŠ è½½ç±»
+public function loadClass($className)
+{
+$classMap = $this->classMap();
+
+if (isset($classMap[$className])) {
+// åŒ…å«å†…æ ¸æ–‡ä»¶
+$file = $classMap[$className];
+} elseif (strpos($className, '\\') !== false) {
+// åŒ…å«åº”ç”¨ï¼ˆapplicationç›®å½•ï¼‰æ–‡ä»¶
+$file = APP_PATH . str_replace('\\', '/', $className) . '.php';
+if (!is_file($file)) {
+return;
+}
+} else {
+return;
+}
+
+include $file;
+
+// è¿™é‡Œå¯ä»¥åŠ å…¥åˆ¤æ–­ï¼Œå¦‚æžœåä¸º$classNameçš„ç±»ã€æŽ¥å£æˆ–è€…æ€§çŠ¶ä¸å­˜åœ¨ï¼Œåˆ™åœ¨è°ƒè¯•æ¨¡å¼ä¸‹æŠ›å‡ºé”™è¯¯
+}
+
+// å†…æ ¸æ–‡ä»¶å‘½åç©ºé—´æ˜ å°„å…³ç³»
+protected function classMap()
+{
+return array(
+'fastphp\base\Controller' => CORE_PATH . '/base/Controller.php',
+'fastphp\base\Model' => CORE_PATH . '/base/Model.php',
+'fastphp\base\View' => CORE_PATH . '/base/View.php',
+'fastphp\db\Db' => CORE_PATH . '/db/Db.php',
+'fastphp\db\Sql' => CORE_PATH . '/db/Sql.php',
+);
+}
 }

@@ -6,13 +6,13 @@
  * Time: 12:13
  */
 
-// Êı¾İ¿âÅäÖÃ
+//æ•°æ®åº“é…ç½®
 $config['db']['host'] = 'localhost';
 $config['db']['username'] = 'root';
 $config['db']['password'] = '123456';
 $config['db']['dbname'] = 'project';
 
-// Ä¬ÈÏ¿ØÖÆÆ÷ºÍ²Ù×÷Ãû
+// é»˜è®¤æ§åˆ¶å™¨å’Œæ“ä½œå
 $config['defaultController'] = 'Item';
 $config['defaultAction'] = 'index';
 
