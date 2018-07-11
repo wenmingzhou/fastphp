@@ -5,6 +5,7 @@
 
 <p><a href="/item/manage">新建</a></p>
 
+
 <table>
     <tr>
         <th>ID</th>

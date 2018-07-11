@@ -45,6 +45,7 @@ class View{
             echo "无法加载视图文件";
         }
 
+
         //加载尾部文件
         if(is_file($controllerFooter))
         {

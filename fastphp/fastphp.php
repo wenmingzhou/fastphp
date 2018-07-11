@@ -60,6 +60,7 @@ class Fastphp
             $param = $urlArray ? $urlArray : array();
         }
 
+
         // 判断控制器和操作是否存在
         $controller = 'app\\controllers\\'. $controllerName . 'Controller';
 
