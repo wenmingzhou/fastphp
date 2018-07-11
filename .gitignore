@@ -1,0 +1,13 @@
+.svn
+*.log
+
+/.idea
+/vendor
+/composer.lock
+
+/esfadmin/shtml/tpl_cache/*
+/esfadmin/base.inc.php
+!.gitkeep
+
+
+
