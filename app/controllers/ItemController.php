@@ -1,6 +1,7 @@
 <?php
 namespace app\controllers;
 use fastphp\base\Controller;
+use app\models\itemModel;
 
 
 class ItemController extends Controller
@@ -10,6 +11,13 @@ class ItemController extends Controller
     public function index()
     {
         $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
+        if($keyword)
+        {
+            $items =(new itemModel())->search($keyword);
+        }else
+        {
+            $items=(new itemModel())->where()->order(['id DESC'])->fetchAll();
+        }
 
         $this->assign('title', '全部条目');
         $this->assign('descrition', '描述');
