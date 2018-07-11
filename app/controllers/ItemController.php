@@ -16,13 +16,23 @@ class ItemController extends Controller
             $items =(new itemModel())->search($keyword);
         }else
         {
+            //['id = :id'], [':id' => $id]
             $items=(new itemModel())->where()->order(['id DESC'])->fetchAll();
         }
 
-        $this->assign('title', '全部条目');
+        $this->assign('title', 'Welcome To My First Php Frame');
         $this->assign('descrition', '描述');
+        $this->assign('items',$items);
+        $this->render();
+    }
 
-        echo "welcome to my first php <br/>";
+
+    public function detail($id)
+    {
+        //$item =(new itemModel())->where(["id = ?"], [$id])->fetch();
+        $item =(new itemModel())->where(["id = ?"], [$id])->fetch();
+        $this->assign('title','条目详情');
+        $this->assign('item',$item);
         $this->render();
     }
 

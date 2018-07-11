@@ -3,7 +3,7 @@
     <input type="submit" value="搜索">
 </form>
 
-<p><a href="/item/manage">新建</a></p>
+<p><a href="/item/manage/add">新建</a></p>
 
 
 <table>
@@ -12,14 +12,15 @@
         <th>内容</th>
         <th>操作</th>
     </tr>
-
+        <?php foreach ($items as $key =>$rs){?>
         <tr>
-            <td>11</td>
-            <td>22</td>
+            <td><?php echo $rs['id'];?></td>
+            <td><?php echo $rs['item_name'];?></td>
             <td>
-                <a href="/item/manage/">编辑</a>
-                <a href="/item/delete/">删除</a>
+                <a href="/item/detail/<?php echo $rs['id'];?>">查看</a>
+                <a href="/item/manage/<?php echo $rs['id'];?>">编辑</a>
+                <a href="/item/delete/<?php echo $rs['id'];?>">删除</a>
             </td>
         </tr>
-
+    <?php }?>
 </table>

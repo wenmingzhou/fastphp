@@ -1,6 +1,6 @@
 <?php
 namespace fastphp\db;
-use \PDOStatement;
+use PDOStatement;
 
 class sql
 {
@@ -13,8 +13,20 @@ class sql
     protected $table;
 
 
+    /**
+     * 查询条件拼接，使用方式：
+     *
+     * $this->where(['id = 1','and title="Web"', ...])->fetch();
+     * 为防止注入，建议通过$param方式传入参数：
+     * $this->where(['id = :id'], [':id' => $id])->fetch();
+     *
+     * @param array $where 条件
+     * @return $this 当前对象
+     */
+
     public function where($where =array(),$param=array())
     {
+
         if($where)
         {
             $this->filter .=' where ';
@@ -35,6 +47,7 @@ class sql
         return $this;
     }
 
+    // 查询多条
     public function fetchAll()
     {
         $sql = sprintf("select * from `%s` %s", $this->table, $this->filter);
@@ -42,6 +55,17 @@ class sql
         $sth = $this->formatParam($sth, $this->param);
         $sth->execute();
         return $sth->fetchAll();
+    }
+
+    // 查询一条
+    public function fetch()
+    {
+        $sql = sprintf("select * from `%s` %s", $this->table, $this->filter);
+        $sth = Db::pdo()->prepare($sql);
+        $sth = $this->formatParam($sth, $this->param);
+        $sth->execute();
+
+        return $sth->fetch();
     }
 
 
@@ -60,11 +84,13 @@ class sql
      */
     public function formatParam(PDOStatement $sth, $params = array())
     {
+
         foreach ($params as $param => &$value) {
             $param = is_int($param) ? $param + 1 : ':' . ltrim($param, ':');
             $sth->bindParam($param, $value);
         }
-
         return $sth;
     }
+
+
 }
