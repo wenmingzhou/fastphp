@@ -26,13 +26,13 @@ class sql
 
     public function where($where =array(),$param=array())
     {
-
         if($where)
         {
             $this->filter .=' where ';
             $this->filter .= implode(' ',$where);
             $this->param   =$param;
         }
+        //print_r($this);die;
         return $this;
 
     }
@@ -68,6 +68,30 @@ class sql
         return $sth->fetch();
     }
 
+    public function update($data)
+    {
+
+        $sql = sprintf("update `%s` set %s %s", $this->table, $this->formatUpdate($data), $this->filter);
+
+        $sth = Db::pdo()->prepare($sql);
+        $sth = $this->formatParam($sth, $data);
+        $sth = $this->formatParam($sth, $this->param);
+        //print_r($sth);die;
+        $sth->execute();
+
+        return $sth->rowCount();
+    }
+
+    // 将数组转换成更新格式的sql语句
+    private function formatUpdate($data)
+    {
+        $fields = array();
+        foreach ($data as $key => $value) {
+            $fields[] = sprintf("`%s` = :%s", $key, $key);
+        }
+        return implode(',', $fields);
+    }
+
 
     /**
      * 占位符绑定具体的变量值
@@ -84,7 +108,14 @@ class sql
      */
     public function formatParam(PDOStatement $sth, $params = array())
     {
-
+        //print_r($params);
+        /*
+         * Array(
+                    [item_name] => Lets go
+                    [description] => uuu  22211
+                )
+         */
+        //update `item` set `item_name` = :item_name,`description` = :description where id = :id
         foreach ($params as $param => &$value) {
             $param = is_int($param) ? $param + 1 : ':' . ltrim($param, ':');
             $sth->bindParam($param, $value);

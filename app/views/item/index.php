@@ -18,7 +18,7 @@
             <td><?php echo $rs['item_name'];?></td>
             <td>
                 <a href="/item/detail/<?php echo $rs['id'];?>">查看</a>
-                <a href="/item/manage/<?php echo $rs['id'];?>">编辑</a>
+                <a href="/item/edit/<?php echo $rs['id'];?>">编辑</a>
                 <a href="/item/delete/<?php echo $rs['id'];?>">删除</a>
             </td>
         </tr>

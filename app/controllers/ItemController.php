@@ -36,6 +36,25 @@ class ItemController extends Controller
         $this->render();
     }
 
+    public function edit($id)
+    {
+        $item =(new itemModel())->where(["id = ?"], [$id])->fetch();
+        if(isset($_POST['item_name']))
+        {
+            //['id = 1','and title="Web"', ...]
+            //["id = $id"]
+            //['id = :id'], [':id' => $id]
+            $data  = array('item_name' => $_POST['item_name'], 'description' => trim($_POST['description']));
+            $count = (new ItemModel)->where(['id = :id'], [':id' => $id])->update($data);
+            $this->assign('title', '修改成功');
+            $this->assign('count', $count);
+
+        }else {
+            $this->assign('title', '条目详情编辑');
+        }
+        $this->assign('item',$item);
+        $this->render();
+    }
 
 
 }
