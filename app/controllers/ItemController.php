@@ -70,5 +70,17 @@ class ItemController extends Controller
         $this->render();
     }
 
+    public function delete($id)
+    {
+        $count =(new ItemModel)->delete($id);
+        if($count)
+        {
+            echo '<script>window.history.go(-1); </script>';
+            echo '<script>location.reload(); </script>';exit;
+        }
+
+
+    }
+
 
 }

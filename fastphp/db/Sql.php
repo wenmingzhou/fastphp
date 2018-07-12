@@ -12,6 +12,8 @@ class sql
 
     protected $table;
 
+    private $primary ='id';
+
 
     /**
      * 查询条件拼接，使用方式：
@@ -92,6 +94,20 @@ class sql
         $sth->execute();
 
     }
+
+    // 根据条件 (id) 删除
+    public function delete($id)
+    {
+        //delete from `item` where `id` = :id
+        $sql = sprintf("delete from `%s` where `%s` = :%s", $this->table, $this->primary, $this->primary);
+
+        $sth = Db::pdo()->prepare($sql);
+        $sth = $this->formatParam($sth, [$this->primary => $id]);
+        $sth->execute();
+
+        return $sth->rowCount();
+    }
+
 
     // 将数组转换成更新格式的sql语句
     private function formatUpdate($data)
