@@ -82,6 +82,17 @@ class sql
         return $sth->rowCount();
     }
 
+    public function add($data)
+    {
+        $sql = sprintf("insert into `%s` %s", $this->table, $this->formatInsert($data));
+        //echo $sql;die;
+        $sth = Db::pdo()->prepare($sql);
+        $sth = $this->formatParam($sth, $data);
+        $sth = $this->formatParam($sth, $this->param);
+        $sth->execute();
+
+    }
+
     // 将数组转换成更新格式的sql语句
     private function formatUpdate($data)
     {
@@ -90,6 +101,20 @@ class sql
             $fields[] = sprintf("`%s` = :%s", $key, $key);
         }
         return implode(',', $fields);
+    }
+
+    // 将数组转换成插入格式的sql语句
+    private function formatInsert($data)
+    {
+        $fields = array();
+        $names = array();
+        foreach ($data as $key => $value) {
+            $fields[] = sprintf("`%s`", $key);
+            $names[] = sprintf(":%s", $key);
+        }
+        $field = implode(',', $fields);
+        $name = implode(',', $names);
+        return sprintf("(%s) values (%s)", $field, $name);
     }
 
 
@@ -115,6 +140,7 @@ class sql
                     [description] => uuu  22211
                 )
          */
+        //insert into `item` (`item_name`,`description`) values (:item_name,:description)
         //update `item` set `item_name` = :item_name,`description` = :description where id = :id
         foreach ($params as $param => &$value) {
             $param = is_int($param) ? $param + 1 : ':' . ltrim($param, ':');

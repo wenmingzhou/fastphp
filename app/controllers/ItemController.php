@@ -57,4 +57,18 @@ class ItemController extends Controller
     }
 
 
+    public function add()
+    {
+        if(isset($_POST['item_name']))
+        {
+            $data  = array('item_name' => $_POST['item_name'], 'description' => trim($_POST['description']));
+            (new ItemModel)->add($data);
+            $this->assign('title', '添加成功');
+        }else {
+            $this->assign('title', '添加数据');
+        }
+        $this->render();
+    }
+
+
 }

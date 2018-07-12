@@ -3,7 +3,7 @@
     <input type="submit" value="搜索">
 </form>
 
-<p><a href="/item/manage/add">新建</a></p>
+<p><a href="/item/add">新建</a></p>
 
 
 <table>
