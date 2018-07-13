@@ -34,6 +34,7 @@ class ItemController extends Controller
         $this->assign('title', 'Welcome To My First Php Frame');
         $this->assign('descrition', '描述');
         $this->assign('items',$items);
+
         $this->assign('new_pagenavi',$new_pagenavi);
         $this->render();
     }

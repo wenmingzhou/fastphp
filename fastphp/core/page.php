@@ -68,6 +68,8 @@ class page
 
     //地址替换
     private function page_replace($page) {
+        //echo $this->myde_url;
+        //?page={page}&keyword=
         return str_replace("{page}", $page, $this->myde_url);
     }
 
@@ -113,7 +115,7 @@ class page
         $str.=$this->myde_home();
         $str.=$this->myde_prev();
         if ($this->myde_i > 1) {
-            $str.="<p class='pageEllipsis'>...</p>";
+            $str.="<span class='pageEllipsis'>...</span>";
         }
         for ($i = $this->myde_i; $i <= $this->myde_en; $i++) {
             if ($i == $this->myde_page) {
@@ -123,7 +125,7 @@ class page
             }
         }
         if ($this->myde_en < $this->myde_page_count) {
-            $str.="<p class='pageEllipsis'>...</p>";
+            $str.="<span class='pageEllipsis'>...</span>";
         }
         $str.=$this->myde_next();
         $str.=$this->myde_last();
