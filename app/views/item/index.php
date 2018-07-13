@@ -24,3 +24,4 @@
         </tr>
     <?php }?>
 </table>
+<?php echo $new_pagenavi;?>

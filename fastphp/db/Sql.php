@@ -49,6 +49,17 @@ class sql
         return $this;
     }
 
+    public function limit($limit =array())
+    {
+        if($limit)
+        {
+            $this->filter .=' limit ';
+            $this->filter .=implode(',',$limit);
+
+        }
+        return $this;
+    }
+
     // 查询多条
     public function fetchAll()
     {

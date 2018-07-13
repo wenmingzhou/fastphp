@@ -2,6 +2,7 @@
 namespace app\controllers;
 use fastphp\base\Controller;
 use app\models\itemModel;
+use fastphp\core\page;
 
 
 class ItemController extends Controller
@@ -11,18 +12,29 @@ class ItemController extends Controller
     public function index()
     {
         $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
+        $showrow = 10; //一页显示的行数
+        $curpage = empty($_GET['page']) ? 1 : $_GET['page'];
+        $limit = ($curpage - 1) * $showrow;
         if($keyword)
         {
-            $items =(new itemModel())->search($keyword);
+            $items =(new itemModel())->where(["item_name like '%$keyword%'"])->order(['id DESC'])->limit(array($limit,$showrow))->fetchAll();
+            $items_total =(new itemModel())->where(["item_name like '%$keyword%'"])->order(['id DESC'])->fetchAll();
         }else
         {
             //['id = :id'], [':id' => $id]
-            $items=(new itemModel())->where()->order(['id DESC'])->fetchAll();
+            $items=(new itemModel())->where()->order(['id DESC'])->limit(array($limit,$showrow))->fetchAll();
+            $items_total=(new itemModel())->where()->order(['id DESC'])->fetchAll();
         }
+        $total_num =count($items_total);//总条数
+        $url = "?page={page}&keyword=".$keyword;
+        $page =new page($total_num,$showrow,$curpage,$url);
+
+        $new_pagenavi= $page->myde_write();
 
         $this->assign('title', 'Welcome To My First Php Frame');
         $this->assign('descrition', '描述');
         $this->assign('items',$items);
+        $this->assign('new_pagenavi',$new_pagenavi);
         $this->render();
     }
 
