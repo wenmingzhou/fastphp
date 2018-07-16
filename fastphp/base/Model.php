@@ -7,13 +7,18 @@ class Model extends Sql{
 
     protected $model;
 
-    public function __construct()
+    protected $db;
+
+    public function __construct($db)
     {
+
         if(!$this->table)
         {
             $this->model =get_class($this);
             $this->model =substr($this->model,0,-5);
             $this->model =strtolower($this->model);
         }
+        $this->db =$db;
+
     }
 }

@@ -64,7 +64,8 @@ class sql
     public function fetchAll()
     {
         $sql = sprintf("select * from `%s` %s", $this->table, $this->filter);
-        $sth = Db::pdo()->prepare($sql);
+
+        $sth = Db::pdo($this->db)->prepare($sql);
         $sth = $this->formatParam($sth, $this->param);
         $sth->execute();
         return $sth->fetchAll();
@@ -74,7 +75,7 @@ class sql
     public function fetch()
     {
         $sql = sprintf("select * from `%s` %s", $this->table, $this->filter);
-        $sth = Db::pdo()->prepare($sql);
+        $sth = Db::pdo($this->db)->prepare($sql);
         $sth = $this->formatParam($sth, $this->param);
         $sth->execute();
 
@@ -86,7 +87,7 @@ class sql
 
         $sql = sprintf("update `%s` set %s %s", $this->table, $this->formatUpdate($data), $this->filter);
 
-        $sth = Db::pdo()->prepare($sql);
+        $sth = Db::pdo($this->db)->prepare($sql);
         $sth = $this->formatParam($sth, $data);
         $sth = $this->formatParam($sth, $this->param);
         //print_r($sth);die;
@@ -99,7 +100,7 @@ class sql
     {
         $sql = sprintf("insert into `%s` %s", $this->table, $this->formatInsert($data));
         //echo $sql;die;
-        $sth = Db::pdo()->prepare($sql);
+        $sth = Db::pdo($this->db)->prepare($sql);
         $sth = $this->formatParam($sth, $data);
         $sth = $this->formatParam($sth, $this->param);
         $sth->execute();
@@ -112,7 +113,7 @@ class sql
         //delete from `item` where `id` = :id
         $sql = sprintf("delete from `%s` where `%s` = :%s", $this->table, $this->primary, $this->primary);
 
-        $sth = Db::pdo()->prepare($sql);
+        $sth = Db::pdo($this->db)->prepare($sql);
         $sth = $this->formatParam($sth, [$this->primary => $id]);
         $sth->execute();
 

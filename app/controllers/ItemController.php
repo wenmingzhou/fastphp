@@ -17,13 +17,14 @@ class ItemController extends Controller
         $limit = ($curpage - 1) * $showrow;
         if($keyword)
         {
-            $items =(new itemModel())->where(["item_name like '%$keyword%'"])->order(['id DESC'])->limit(array($limit,$showrow))->fetchAll();
-            $items_total =(new itemModel())->where(["item_name like '%$keyword%'"])->order(['id DESC'])->fetchAll();
+            $items =(new itemModel('slave'))->where(["item_name like '%$keyword%'"])->order(['id DESC'])->limit(array($limit,$showrow))->fetchAll();
+
+            $items_total =(new itemModel('slave'))->where(["item_name like '%$keyword%'"])->order(['id DESC'])->fetchAll();
         }else
         {
             //['id = :id'], [':id' => $id]
-            $items=(new itemModel())->where()->order(['id DESC'])->limit(array($limit,$showrow))->fetchAll();
-            $items_total=(new itemModel())->where()->order(['id DESC'])->fetchAll();
+            $items=(new itemModel('slave'))->where()->order(['id DESC'])->limit(array($limit,$showrow))->fetchAll();
+            $items_total=(new itemModel('slave'))->where()->order(['id DESC'])->fetchAll();
         }
         $total_num =count($items_total);//总条数
         $url = "?page={page}&keyword=".$keyword;
@@ -43,7 +44,7 @@ class ItemController extends Controller
     public function detail($id)
     {
         //$item =(new itemModel())->where(["id = ?"], [$id])->fetch();
-        $item =(new itemModel())->where(["id = ?"], [$id])->fetch();
+        $item =(new itemModel('slave'))->where(["id = ?"], [$id])->fetch();
         $this->assign('title','条目详情');
         $this->assign('item',$item);
         $this->render();
@@ -51,14 +52,14 @@ class ItemController extends Controller
 
     public function edit($id)
     {
-        $item =(new itemModel())->where(["id = ?"], [$id])->fetch();
+        $item =(new itemModel('slave'))->where(["id = ?"], [$id])->fetch();
         if(isset($_POST['item_name']))
         {
             //['id = 1','and title="Web"', ...]
             //["id = $id"]
             //['id = :id'], [':id' => $id]
             $data  = array('item_name' => $_POST['item_name'], 'description' => trim($_POST['description']));
-            $count = (new ItemModel)->where(['id = :id'], [':id' => $id])->update($data);
+            $count = (new ItemModel('master'))->where(['id = :id'], [':id' => $id])->update($data);
             $this->assign('title', '修改成功');
             $this->assign('count', $count);
 
@@ -75,7 +76,7 @@ class ItemController extends Controller
         if(isset($_POST['item_name']))
         {
             $data  = array('item_name' => $_POST['item_name'], 'description' => trim($_POST['description']));
-            (new ItemModel)->add($data);
+            (new ItemModel('master'))->add($data);
             $this->assign('title', '添加成功');
         }else {
             $this->assign('title', '添加数据');
@@ -85,7 +86,7 @@ class ItemController extends Controller
 
     public function delete($id)
     {
-        $count =(new ItemModel)->delete($id);
+        $count =(new ItemModel('master'))->delete($id);
         if($count)
         {
             echo '<script>window.history.go(-1); </script>';

@@ -7,10 +7,17 @@
  */
 
 //数据库配置
-$config['db']['host'] = 'localhost';
-$config['db']['username'] = 'root';
-$config['db']['password'] = '';
-$config['db']['dbname'] = 'fastphp';
+//主库
+$config['master']['host'] = '127.0.0.1';
+$config['master']['username'] = 'root';
+$config['master']['password'] = '';
+$config['master']['dbname'] = 'fastphp';
+
+//从库
+$config['slave']['host'] = '127.0.0.1';
+$config['slave']['username'] = 'root';
+$config['slave']['password'] = '';
+$config['slave']['dbname'] = 'fastphp';
 
 // 默认控制器和操作名
 $config['defaultController'] = 'Item';

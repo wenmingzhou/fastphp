@@ -25,7 +25,7 @@ class Fastphp
         $this->setReporting();
         $this->removeMagicQuotes();
         $this->unregisterGlobals();
-        $this->setDbConfig();
+
         $this->route();
     }
 
@@ -139,17 +139,7 @@ class Fastphp
         }
     }
 
-    // 配置数据库信息
-    public function setDbConfig()
-    {
-        if ($this->config['db'])
-        {
-            define('DB_HOST', $this->config['db']['host']);
-            define('DB_NAME', $this->config['db']['dbname']);
-            define('DB_USER', $this->config['db']['username']);
-            define('DB_PASS', $this->config['db']['password']);
-        }
-    }
+
 
     // 自动加载类
     public function loadClass($className)
