@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/app/controllers/TestController.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/models/itemModel.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/views/footer.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/views/header.php" charset="UTF-8" />
@@ -8,6 +9,8 @@
     <file url="file://$PROJECT_DIR$/fastphp/base/Controller.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/fastphp/base/Model.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/fastphp/base/View.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/fastphp/core/cache.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/fastphp/core/memcache.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/fastphp/core/page.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/fastphp/db/Db.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/fastphp/db/Sql.php" charset="UTF-8" />
