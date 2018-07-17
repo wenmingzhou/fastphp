@@ -7,7 +7,7 @@
  */
 namespace fastphp\core;
 
-//选择指定的redis数据库连接，默认端口号为6379
+//閫夋嫨鎸囧畾鐨剅edis鏁版嵁搴撹繛鎺ワ紝榛樿绔彛鍙蜂负6379
 class redis
 {
     public $redis;

@@ -12,6 +12,7 @@
     <file url="file://$PROJECT_DIR$/fastphp/core/cache.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/fastphp/core/memcache.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/fastphp/core/page.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/fastphp/core/redis.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/fastphp/db/Db.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/fastphp/db/Sql.php" charset="UTF-8" />
   </component>
