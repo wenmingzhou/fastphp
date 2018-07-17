@@ -23,4 +23,8 @@ $config['slave']['dbname'] = 'fastphp';
 $config['defaultController'] = 'Item';
 $config['defaultAction'] = 'index';
 
+$config['cache']['type']='memcache';
+$config['cache']['ip']='localhost';
+$config['cache']['port']='11211';
+
 return $config;
