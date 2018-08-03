@@ -30,11 +30,9 @@ class TestController extends Controller
 
     public function search()
     {
-
         $dir  ='D:\wamp\www\workbench\admin';
         $stime ='1532102399';
         $tool =new tool($stime);
         $tool->loopdir($dir);
-
     }
 }

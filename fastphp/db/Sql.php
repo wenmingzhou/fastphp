@@ -100,9 +100,12 @@ class sql
     {
         $sql = sprintf("insert into `%s` %s", $this->table, $this->formatInsert($data));
         //echo $sql;die;
+
         $sth = Db::pdo($this->db)->prepare($sql);
+
         $sth = $this->formatParam($sth, $data);
         $sth = $this->formatParam($sth, $this->param);
+
         $sth->execute();
 
     }
