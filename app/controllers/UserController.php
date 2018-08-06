@@ -22,14 +22,18 @@ class UserController extends Controller
             $name =$_POST['name'];
             $password =md5(trim($_POST['password']));
             $file = $_FILES['file'];
-            $dir =APP_PATH.'/images/';
-            $uploadpic =new uploadpic(true, $dir, array('jpg', 'jpeg', 'png'));
+
+            $uploadpic =new uploadpic(true, array('jpg', 'jpeg', 'png'));
+            $uploadpic->setResizeImage(true);
+            $uploadpic->setResizeWidth(240);
+            $uploadpic->setResizeHeight(180);
+
             $uploadpic->upload_file($file);
             echo $uploadpic->get_msg();
 
+
             $data  = array('name' => $_POST['name'], 'password' => $password);
             (new UserModel('master'))->add($data);
-
 
         }
         $this->assign('title', 'Welcome To register');
