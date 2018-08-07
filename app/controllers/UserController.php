@@ -24,6 +24,20 @@ class UserController extends Controller
             $file = $_FILES['file'];
 
             $uploadpic =new uploadpic(true, array('jpg', 'jpeg', 'png'));
+            $uploadpic->setMaxSize(10240);
+
+            //是否添加水印
+            $uploadpic->setWatermark(true);
+            $uploadpic->setWatermarkType(2);
+            $uploadpic->setWatermarkPosition("rb");
+
+            $logo = 'http://esf.s.house365.com/zsb/images/v1.0/logo_watermark.png';
+
+            $logo = APP_PATH."static/images/logo.png";  //fix by : wmc
+            $uploadpic->setWatermarkImage($logo);//水印
+
+
+            //压缩图片,小图需要的尺寸
             $uploadpic->setResizeImage(true);
             $uploadpic->setResizeWidth(240);
             $uploadpic->setResizeHeight(180);

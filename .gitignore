@@ -4,7 +4,7 @@
 /.idea
 /vendor
 /composer.lock
-
+/images
 /esfadmin/shtml/tpl_cache/*
 /esfadmin/base.inc.php
 !.gitkeep
