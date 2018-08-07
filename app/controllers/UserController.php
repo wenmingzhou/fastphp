@@ -37,6 +37,7 @@ class UserController extends Controller
             $uploadpic->setWatermarkImage($logo);//水印
 
 
+
             //压缩图片,小图需要的尺寸
             $uploadpic->setResizeImage(true);
             $uploadpic->setResizeWidth(240);

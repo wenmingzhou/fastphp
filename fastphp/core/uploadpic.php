@@ -462,6 +462,7 @@ class uploadpic{
         $this->error       = $file['error'];
         $this->file_tmp_name = $file['tmp_name'];
         //print_r($file);die;
+
         $this->ext = $this->get_file_type($this->file_name);
 
         switch($this->error){
